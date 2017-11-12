@@ -63,7 +63,6 @@ class FormularioAutor extends Component {
           </div>  
         );
     }
-
 }
 
 class TabelaAutores extends Component {
