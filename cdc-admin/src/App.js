@@ -3,6 +3,7 @@ import './css/pure-min.css';
 import './css/side-menu.css';
 import $ from 'jquery';
 import InputCustomizado from './components/InputCustomizado';
+import BotaoSubmitCustomizado from './components/BotaoSubmitCustomizado';
 
 class App extends Component {
 
@@ -67,14 +68,11 @@ class App extends Component {
             </div>
             <div className="content" id="content">
               <div className="pure-form pure-form-aligned">
-                <form className="pure-form pure-form-aligned" method="POST" onSubmit={this.enviaForm}>
+                <form className="pure-form pure-form-aligned" method="post" onSubmit={this.enviaForm}>
                   <InputCustomizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome" />
                   <InputCustomizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email" />
                   <InputCustomizado id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} label="Senha" />
-                  <div className="pure-control-group">                                  
-                    <label></label> 
-                    <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    
-                  </div>
+                  <BotaoSubmitCustomizado label="Gravar" />
                 </form>             
 
               </div>  
