@@ -1,47 +1,9 @@
 import React, {Component} from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
-import $ from 'jquery';
-import InputCustomizado from './components/InputCustomizado';
-import BotaoSubmitCustomizado from './components/BotaoSubmitCustomizado';
+import AutorBox from './Autor';
 
 class App extends Component {
-
-    constructor() {
-        super();
-        this.state = {lista: [], nome: '', email: '', senha: ''};
-        this.enviaForm = this.enviaForm.bind(this);
-        this.setNome = this.setNome.bind(this);
-        this.setEmail = this.setEmail.bind(this);
-        this.setSenha = this.setSenha.bind(this);
-    }
-
-    componentDidMount() {
-        $.ajax({
-            url: "http://localhost:8080/api/autores",
-            dataType: 'json',
-            success: (resposta) => {
-                this.setState({lista:resposta});
-            }
-        });
-    }
-
-    enviaForm(evento) {
-        evento.preventDefault();
-        $.ajax({
-            url: "http://localhost:8080/api/autores",
-            contentType: 'application/json',
-            dataType: 'json',
-            type: 'post',
-            data: JSON.stringify({nome:this.state.nome, email: this.state.email, senha: this.state.senha}),
-            success: (resposta) => {
-                this.setState({lista:resposta});
-            },
-            error: (resposta) => {
-                console.log("erro");
-            }
-        });
-    }
 
     render() {
         return (
@@ -67,53 +29,11 @@ class App extends Component {
               <h1>Cadastro de Autores</h1>
             </div>
             <div className="content" id="content">
-              <div className="pure-form pure-form-aligned">
-                <form className="pure-form pure-form-aligned" method="post" onSubmit={this.enviaForm}>
-                  <InputCustomizado id="nome" type="text" name="nome" value={this.state.nome} onChange={this.setNome} label="Nome" />
-                  <InputCustomizado id="email" type="email" name="email" value={this.state.email} onChange={this.setEmail} label="Email" />
-                  <InputCustomizado id="senha" type="password" name="senha" value={this.state.senha} onChange={this.setSenha} label="Senha" />
-                  <BotaoSubmitCustomizado label="Gravar" />
-                </form>             
-
-              </div>  
-              <div>            
-                <table className="pure-table">
-                  <thead>
-                    <tr>
-                      <th>Nome</th>
-                      <th>email</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {
-                        this.state.lista.map(autor => {
-                            return (
-                                <tr key={autor.id}>
-                                    <td>{autor.nome}</td>
-                                    <td>{autor.email}</td>
-                                </tr>
-                            );
-                        })
-                    }
-                  </tbody>
-                </table> 
-              </div>             
+                <AutorBox/>
             </div>
           </div>  
         </div>
         );
-    }
-
-    setNome(evento) {
-        this.setState({nome:evento.target.value});
-    }
-
-    setEmail(evento) {
-        this.setState({email:evento.target.value});
-    }
-
-    setSenha(evento) {
-        this.setState({senha:evento.target.value});
     }
 }
 
