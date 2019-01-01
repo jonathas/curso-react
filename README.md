@@ -87,13 +87,13 @@ Download the jar file from [https://github.com/alberto-alura/instalura-api/raw/m
 Now, in case your MySQL server doesn't have a password, you can just run:
 
 ```bash
-java -jar jar-cdc-react.jar
+java -jar instalura.jar
 ```
 
 In case your MySQL server has a password, run it the following way:
 
 ```bash
-java -Dspring.datasource.password=myPassword -jar jar-cdc-react.jar
+java -Dspring.datasource.password=myPassword -jar instalura.jar
 ```
 
 ## Content
