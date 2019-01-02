@@ -60,29 +60,29 @@ class FotoInfo extends Component {
 }
 
 class FotoHeader extends Component {
-    render(){
+  render() {
         return (
             <header className="foto-header">
               <figure className="foto-usuario">
-                <img src="https://scontent-prg1-1.cdninstagram.com/vp/86f9457c8a8304713eb76abdff6cc362/5CD7F329/t51.2885-19/s150x150/34036284_881108158745300_435198002332696576_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com" alt="foto do usuario"/>
+              <img src={this.props.foto.urlPerfil} alt="foto do usuario"/>
                 <figcaption className="foto-usuario">
                   <a href="#">
-                    alots
+                    {this.props.foto.loginUsuario}
                   </a>  
                 </figcaption>
               </figure>
-              <time className="foto-data">03/10/2016 20:13</time>
+            <time className="foto-data">{this.props.foto.horario}</time>
             </header>            
         );
     }
 }
 
 export default class FotoItem extends Component {
-    render(){
+  render() {
         return (
           <div className="foto">
-            <FotoHeader/>
-            <img alt="foto" className="foto-src" src="https://scontent-prg1-1.cdninstagram.com/vp/78d10c2c171ad21299d44dc81b3b9377/5CC2B6DD/t51.2885-15/e35/46877293_771225333212686_8376465897876997487_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com"/>
+            <FotoHeader foto={this.props.foto} />
+            <img alt="foto" className="foto-src" src={this.props.foto.urlFoto}/>
             <FotoInfo/>
             <FotoAtualizacoes/>
           </div>            
