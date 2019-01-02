@@ -8,28 +8,30 @@ class Login extends Component {
         this.state = { msg: '' };
     }
 
-    envia(event) {
-        event.preventDefault();
-        const requestInfo = {
-            method: 'POST',
-            body: JSON.stringify({ login: this.login.value, senha: this.senha.value }),
-            headers: new Headers({
-                'Content-type': 'application/json'
-            })
-        };
+    async envia(event) {
+        try {
+            event.preventDefault();
+            const requestInfo = {
+                method: 'POST',
+                body: JSON.stringify({ login: this.login.value, senha: this.senha.value }),
+                headers: new Headers({
+                    'Content-type': 'application/json'
+                })
+            };
 
-        fetch('http://localhost:8080/api/public/login', requestInfo)
-            .then(res => {
-                if (res.ok) {
-                    return res.text();
-                }
+            const res = await fetch('http://localhost:8080/api/public/login', requestInfo);
+
+            if (!res.ok) {
                 throw new Error('Não foi possível fazer o login');
-            })
-            .then(token => {
-                localStorage.setItem('auth-token', token);
-                this.props.history.push('/timeline');
-            })
-            .catch(err => this.setState({ msg: err.message }));
+            }
+
+            const token = await res.text();
+            localStorage.setItem('auth-token', token);
+
+            this.props.history.push('/timeline');
+        } catch (err) {
+            this.setState({ msg: err.message });
+        }
     }
 
     render() {
