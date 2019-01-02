@@ -96,6 +96,8 @@ In case your MySQL server has a password, run it the following way:
 java -Dspring.datasource.password=myPassword -jar instalura.jar
 ```
 
+Then access the following address to populate the database: http://localhost:8080/gera/dados
+
 ## Content
 
 ### Creation of Instalura
