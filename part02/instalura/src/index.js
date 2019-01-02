@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import Login from './components/Login';
 import * as serviceWorker from './serviceWorker';
-import { Route } from 'react-router';
+import { Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(
     <BrowserRouter>
-        <div>
-            <Route path="/" component={Login} />
+        <Switch>
+            <Route exact path="/" component={Login} />
             <Route path="/timeline" component={App} />
-        </div>
+        </Switch>
     </BrowserRouter>,
     document.getElementById('root')
 );
