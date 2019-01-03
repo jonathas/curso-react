@@ -18,11 +18,11 @@ export default class Header extends Component {
           <nav>
             <ul className="header-nav">
               <li className="header-nav-item">
-                <a href="#">
+                <button>
                   ♡
                   {/*                 ♥ */}
                   {/* Quem deu like nas minhas fotos */}
-                </a>
+                </button>
               </li>
             </ul>
           </nav>

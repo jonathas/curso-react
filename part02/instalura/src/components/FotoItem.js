@@ -4,7 +4,7 @@ class FotoAtualizacoes extends Component {
     render(){
         return (
             <section className="fotoAtualizacoes">
-              <a href="#" className="fotoAtualizacoes-like">Likar</a>
+              <button className="fotoAtualizacoes-like">Likar</button>
               <form className="fotoAtualizacoes-form">
                 <input type="text" placeholder="Adicione um comentário..." className="fotoAtualizacoes-form-campo"/>
                 <input type="submit" value="Comentar!" className="fotoAtualizacoes-form-submit"/>
@@ -22,7 +22,7 @@ class FotoInfo extends Component {
               <div className="foto-info-likes">
               {
                 this.props.foto.likers.map(liker => {
-                  return (<a key="{liker.login}" href="#">{liker.login},</a>)
+                  return (<button key="{liker.login}">{liker.login},</button>)
                 })  
               }
 
@@ -31,7 +31,7 @@ class FotoInfo extends Component {
               </div>
 
               <p className="foto-info-legenda">
-                <a className="foto-info-autor">autor </a>
+                <button className="foto-info-autor">autor </button>
                 {this.props.foto.comentario}
               </p>
 
@@ -40,7 +40,7 @@ class FotoInfo extends Component {
                 this.props.foto.comentarios.map(comentario => {
                   return (
                     <li className="comentario" key={comentario.id}>
-                      <a className="foto-info-autor">{comentario.login} </a>
+                      <button className="foto-info-autor">{comentario.login} </button>
                       {comentario.texto}
                     </li>
                     );
@@ -59,9 +59,9 @@ class FotoHeader extends Component {
               <figure className="foto-usuario">
               <img src={this.props.foto.urlPerfil} alt="foto do usuario"/>
                 <figcaption className="foto-usuario">
-                  <a href="#">
+                  <button>
                     {this.props.foto.loginUsuario}
-                  </a>  
+                  </button>  
                 </figcaption>
               </figure>
             <time className="foto-data">{this.props.foto.horario}</time>

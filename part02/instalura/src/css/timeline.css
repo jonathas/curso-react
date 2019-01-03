@@ -237,4 +237,9 @@ body {
 .timeline-leave.timeline-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
-}      
+}
+
+button {
+  border: 0;
+  background: transparent;
+}

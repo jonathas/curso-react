@@ -4,13 +4,23 @@ import App from './App';
 import Login from './components/Login';
 import * as serviceWorker from './serviceWorker';
 import { Route, Switch } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Redirect } from 'react-router-dom';
+
+function isLoggedIn() {
+    return (localStorage.getItem('auth-token') === null) ? false : true;
+}
 
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={Login} />
-            <Route path="/timeline" component={App} />
+            <Route path="/timeline" render={() => (
+                isLoggedIn() ? (
+                    <App/>
+                ) : (
+                    <Redirect to="/"/>
+                )
+            )} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')
