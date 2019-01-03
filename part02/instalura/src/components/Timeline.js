@@ -11,15 +11,21 @@ export default class Timeline extends Component {
 
     async carregaFotos() {
         let urlPerfil;
+        let res;
 
         if (!this.name) {
-            const token = localStorage.getItem('auth-token');
-            urlPerfil = `http://localhost:8080/api/fotos?X-AUTH-TOKEN=${token}`;
+            const requestInfo = {
+                headers: new Headers({
+                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
+                })
+            };
+            urlPerfil = `http://localhost:8080/api/fotos`;
+            res = await fetch(urlPerfil, requestInfo);
         } else {
             urlPerfil = `http://localhost:8080/api/public/fotos/${this.name}`;
+            res = await fetch(urlPerfil);
         }
 
-        const res = await fetch(urlPerfil);
         const fotos = await res.json();
         this.setState({
             fotos
@@ -40,8 +46,8 @@ export default class Timeline extends Component {
     componentDidUpdate(prevProps) {
         if (this.name !== prevProps.name) {
             this.name = prevProps.name;
-            this.carregaFotos();
         }
+        this.carregaFotos();
     }
 
     render() {
