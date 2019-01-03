@@ -1,34 +1,20 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import queryString from 'query-string';
+import InstaluraService from '../services/InstaluraService';
 
 class Login extends Component {
 
     constructor(props) {
         super(props);
+        this.instaluraService = new InstaluraService();
         this.state = queryString.parse(this.props.location.search);
     }
 
     async envia(event) {
         try {
             event.preventDefault();
-            const requestInfo = {
-                method: 'POST',
-                body: JSON.stringify({ login: this.login.value, senha: this.senha.value }),
-                headers: new Headers({
-                    'Content-type': 'application/json'
-                })
-            };
-
-            const res = await fetch('http://localhost:8080/api/public/login', requestInfo);
-
-            if (!res.ok) {
-                throw new Error('Não foi possível fazer o login');
-            }
-
-            const token = await res.text();
-            localStorage.setItem('auth-token', token);
-
+            await this.instaluraService.login(this.login.value, this.senha.value);
             this.props.history.push('/timeline');
         } catch (err) {
             this.setState({ msg: err.message });

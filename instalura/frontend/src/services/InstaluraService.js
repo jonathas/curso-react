@@ -8,6 +8,22 @@ export default class InstaluraService {
         });
     }
 
+    async login(login, senha) {
+        const requestInfo = {
+            method: 'POST',
+            body: JSON.stringify({ login, senha }),
+            headers: this.headers
+        };
+
+        const res = await fetch(`${this.apiBase}/public/login`, requestInfo);
+        if (!res.ok) {
+            throw new Error('Não foi possível fazer o login');
+        }
+
+        const token = await res.text();
+        localStorage.setItem('auth-token', token);
+    }
+
     listaFotos() {
         return fetch(`${this.apiBase}/fotos`, { headers: this.headers });
     }

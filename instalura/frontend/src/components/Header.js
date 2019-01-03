@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
+import InstaluraService from '../services/InstaluraService';
 import Pubsub from 'pubsub-js';
 
 export default class Header extends Component {
+
+  constructor() {
+    super();
+    this.instaluraService = new InstaluraService();
+  }
 
   async pesquisa(event) {
     try {
@@ -11,7 +17,7 @@ export default class Header extends Component {
         throw new Error('O valor pesquisado não pode ser vazio');
       }
 
-      const res = await fetch(`http://localhost:8080/api/public/fotos/${this.loginPesquisado.value}`);
+      const res = await this.instaluraService.listaFotosPublicas(this.loginPesquisado.value);
       const fotos = await res.json();
 
       Pubsub.publish('timeline', {fotos});
