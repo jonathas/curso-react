@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import FotoItem from './FotoItem';
+import Pubsub from 'pubsub-js';
 
 export default class Timeline extends Component {
 
@@ -32,8 +33,17 @@ export default class Timeline extends Component {
         });
     }
 
+    componentWillMount() {
+        Pubsub.subscribe('timeline', (topico, infoFotos) => {
+            if (infoFotos.fotos.length > 0) {
+                this.name = infoFotos.fotos[0].loginUsuario;
+            }
+            this.setState({ fotos: infoFotos.fotos });
+        });
+    }
+
     componentDidMount() {
-        this.carregaFotos();    
+        this.carregaFotos();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -43,17 +53,10 @@ export default class Timeline extends Component {
         this.carregaFotos();
     }
 
-    componentDidUpdate(prevProps) {
-        if (this.name !== prevProps.name) {
-            this.name = prevProps.name;
-        }
-        this.carregaFotos();
-    }
-
     render() {
         return (
             <div className="fotos container">
-                {            
+                {
                     this.state.fotos.map(foto => {
                         // this is important because the instagram images in the API were expired
                         foto.urlPerfil = 'https://scontent-prg1-1.cdninstagram.com/vp/86f9457c8a8304713eb76abdff6cc362/5CD7F329/t51.2885-19/s150x150/34036284_881108158745300_435198002332696576_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
