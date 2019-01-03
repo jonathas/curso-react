@@ -7,6 +7,10 @@ export default class Header extends Component {
     try {
       event.preventDefault();
 
+      if (!this.loginPesquisado.value) {
+        throw new Error('O valor pesquisado não pode ser vazio');
+      }
+
       const res = await fetch(`http://localhost:8080/api/public/fotos/${this.loginPesquisado.value}`);
       const fotos = await res.json();
 
