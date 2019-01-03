@@ -1,4 +1,3 @@
-
 export default class InstaluraService {
 
     constructor() {
@@ -14,7 +13,7 @@ export default class InstaluraService {
     }
 
     listaFotosPublicas(name) {
-        return fetch(`${this.baseUrl}/public/fotos/${this.name}`);
+        return fetch(`${this.baseUrl}/public/fotos/${name}`);
     }
 
     like(fotoId) {
