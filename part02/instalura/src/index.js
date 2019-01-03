@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import Login from './components/Login';
+import Logout from './components/Logout';
 import * as serviceWorker from './serviceWorker';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter, Redirect } from 'react-router-dom';
@@ -21,6 +22,7 @@ ReactDOM.render(
                     <Redirect to="/?msg=Você precisa estar logado para acessar o endereço"/>
                 )
             )} />
+            <Route path="/logout" component={Logout} />
         </Switch>
     </BrowserRouter>,
     document.getElementById('root')
