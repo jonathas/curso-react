@@ -3,24 +3,45 @@ import FotoItem from './FotoItem';
 
 export default class Timeline extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = { fotos: [] };
+        this.name = this.props.name;
     }
 
-    async componentDidMount() {
+    async carregaFotos() {
         let urlPerfil;
 
-        if (!this.props.name) {
+        if (!this.name) {
             const token = localStorage.getItem('auth-token');
             urlPerfil = `http://localhost:8080/api/fotos?X-AUTH-TOKEN=${token}`;
         } else {
-            urlPerfil = `http://localhost:8080/api/public/fotos/${this.props.name}`;
+            urlPerfil = `http://localhost:8080/api/public/fotos/${this.name}`;
         }
 
         const res = await fetch(urlPerfil);
         const fotos = await res.json();
-        this.setState({ fotos });
+        this.setState({
+            fotos
+        });
+    }
+
+    componentDidMount() {
+        this.carregaFotos();    
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.name !== '') {
+            this.name = nextProps.name;
+        }
+        this.carregaFotos();
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.name !== prevProps.name) {
+            this.name = prevProps.name;
+            this.carregaFotos();
+        }
     }
 
     render() {
