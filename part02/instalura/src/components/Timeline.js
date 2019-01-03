@@ -54,6 +54,56 @@ export default class Timeline extends Component {
         this.carregaFotos();
     }
 
+    async like(fotoId) {
+        try {
+            const requestInfo = {
+                method: 'POST',
+                headers: new Headers({
+                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
+                })
+            };
+
+            const res = await fetch(`http://localhost:8080/api/fotos/${fotoId}/like`, requestInfo);
+
+            if (!res.ok) {
+                throw new Error('Não foi possível realizar o like da foto');
+            }
+
+            const liker = await res.json();
+            Pubsub.publish('atualiza-liker', { fotoId, liker });
+            return true;
+        } catch (err) {
+            console.log(err.message);
+            return false;
+        }
+    }
+
+    async comenta(fotoId, textoComentario) {
+        try {
+            const requestInfo = {
+                method: 'POST',
+                body: JSON.stringify({ texto: textoComentario }),
+                headers: new Headers({
+                    'Content-type': 'application/json',
+                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
+                })
+            };
+
+            const res = await fetch(`http://localhost:8080/api/fotos/${fotoId}/comment`, requestInfo);
+
+            if (!res.ok) {
+                throw new Error('Não foi possível comentar');
+            }
+
+            const novoComentario = await res.json();
+            Pubsub.publish('novos-comentarios', { fotoId, novoComentario });
+            return true;
+        } catch (err) {
+            console.log(err.message);
+            return false;
+        }
+    }
+
     render() {
         return (
             <div className="fotos container">
@@ -68,7 +118,7 @@ export default class Timeline extends Component {
 
                             foto.urlFoto = 'https://scontent-prg1-1.cdninstagram.com/vp/78d10c2c171ad21299d44dc81b3b9377/5CC2B6DD/t51.2885-15/e35/46877293_771225333212686_8376465897876997487_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
 
-                            return <FotoItem key={foto.id} foto={foto} />;
+                            return <FotoItem key={foto.id} foto={foto} like={this.like} comenta={this.comenta} />;
                         })
                     }
                 </CSSTransitionGroup>
