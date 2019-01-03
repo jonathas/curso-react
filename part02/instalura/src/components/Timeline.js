@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import FotoItem from './FotoItem';
-import Pubsub from 'pubsub-js';
 import { CSSTransitionGroup } from 'react-transition-group';
+import TimelineService from '../services/TimelineService';
 
 export default class Timeline extends Component {
 
@@ -9,59 +9,19 @@ export default class Timeline extends Component {
         super(props);
         this.state = { fotos: [] };
         this.name = this.props.name;
+        this.timelineService = new TimelineService();
     }
 
     async carregaFotos() {
-        let urlPerfil;
-        let res;
-
-        if (!this.name) {
-            const requestInfo = {
-                headers: new Headers({
-                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
-                })
-            };
-            urlPerfil = `http://localhost:8080/api/fotos`;
-            res = await fetch(urlPerfil, requestInfo);
-        } else {
-            urlPerfil = `http://localhost:8080/api/public/fotos/${this.name}`;
-            res = await fetch(urlPerfil);
-        }
-
-        const fotos = await res.json();
-        this.setState({
-            fotos
-        });
+        this.timelineService.lista(this.name);
     }
 
     componentWillMount() {
-        Pubsub.subscribe('timeline', (topico, infoFotos) => {
-            if (infoFotos.fotos.length > 0) {
-                this.name = infoFotos.fotos[0].loginUsuario;
+        this.timelineService.subscribe(fotos => {
+            if (fotos.length > 0) {
+                this.name = fotos[0].loginUsuario;
             }
-            this.setState({ fotos: infoFotos.fotos });
-        });
-
-        Pubsub.subscribe('atualiza-liker', (topico, infoLiker) => {
-            const fotoAchada = this.state.fotos.find(foto => foto.id === infoLiker.fotoId);
-            fotoAchada.likeada = !fotoAchada.likeada;
-
-            const possivelLiker = fotoAchada.likers.find(liker => liker.login === infoLiker.liker.login);
-
-            if (!possivelLiker) {
-                fotoAchada.likers.push(infoLiker.liker);
-            } else {
-                const novosLikers = fotoAchada.likers.filter(liker => liker.login !== infoLiker.liker.login);
-                fotoAchada.likers = novosLikers;
-            }
-
-            this.setState({ fotos: this.state.fotos });
-        });
-
-        Pubsub.subscribe('novos-comentarios', (topico, infoComentario) => {
-            const fotoAchada = this.state.fotos.find(foto => foto.id === infoComentario.fotoId);
-            fotoAchada.comentarios.push(infoComentario.novoComentario);
-            this.setState({ fotos: this.state.fotos });
+            this.setState({ fotos });
         });
     }
 
@@ -76,52 +36,19 @@ export default class Timeline extends Component {
         this.carregaFotos();
     }
 
-    async like(fotoId) {
-        try {
-            const requestInfo = {
-                method: 'POST',
-                headers: new Headers({
-                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
-                })
-            };
-
-            const res = await fetch(`http://localhost:8080/api/fotos/${fotoId}/like`, requestInfo);
-
-            if (!res.ok) {
-                throw new Error('Não foi possível realizar o like da foto');
-            }
-
-            const liker = await res.json();
-            Pubsub.publish('atualiza-liker', { fotoId, liker });
-        } catch (err) {
-            console.log(err.message);
-        }
+    like(fotoId) {
+        this.timelineService.like(fotoId);
     }
 
-    async comenta(fotoId, textoComentario) {
-        try {
-            const requestInfo = {
-                method: 'POST',
-                body: JSON.stringify({ texto: textoComentario }),
-                headers: new Headers({
-                    'Content-type': 'application/json',
-                    'X-AUTH-TOKEN': localStorage.getItem('auth-token')
-                })
-            };
+    comenta(fotoId, textoComentario) {
+        return this.timelineService.comenta(fotoId, textoComentario);
+    }
 
-            const res = await fetch(`http://localhost:8080/api/fotos/${fotoId}/comment`, requestInfo);
+    // this is important because the instagram images in the API were expired
+    setFakePictures(foto) {
+        foto.urlPerfil = 'https://scontent-prg1-1.cdninstagram.com/vp/86f9457c8a8304713eb76abdff6cc362/5CD7F329/t51.2885-19/s150x150/34036284_881108158745300_435198002332696576_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
 
-            if (!res.ok) {
-                throw new Error('Não foi possível comentar');
-            }
-
-            const novoComentario = await res.json();
-            Pubsub.publish('novos-comentarios', { fotoId, novoComentario });
-            return true;
-        } catch (err) {
-            console.log(err.message);
-            return false;
-        }
+        foto.urlFoto = 'https://scontent-prg1-1.cdninstagram.com/vp/78d10c2c171ad21299d44dc81b3b9377/5CC2B6DD/t51.2885-15/e35/46877293_771225333212686_8376465897876997487_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
     }
 
     render() {
@@ -133,12 +60,12 @@ export default class Timeline extends Component {
                     transitionLeaveTimeout={300}>
                     {
                         this.state.fotos.map(foto => {
-                            // this is important because the instagram images in the API were expired
-                            foto.urlPerfil = 'https://scontent-prg1-1.cdninstagram.com/vp/86f9457c8a8304713eb76abdff6cc362/5CD7F329/t51.2885-19/s150x150/34036284_881108158745300_435198002332696576_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
-
-                            foto.urlFoto = 'https://scontent-prg1-1.cdninstagram.com/vp/78d10c2c171ad21299d44dc81b3b9377/5CC2B6DD/t51.2885-15/e35/46877293_771225333212686_8376465897876997487_n.jpg?_nc_ht=scontent-prg1-1.cdninstagram.com';
-
-                            return <FotoItem key={foto.id} foto={foto} like={this.like} comenta={this.comenta} />;
+                            this.setFakePictures(foto);
+                            return <FotoItem
+                                key={foto.id}
+                                foto={foto}
+                                like={this.like.bind(this)}
+                                comenta={this.comenta.bind(this)} />;
                         })
                     }
                 </CSSTransitionGroup>
