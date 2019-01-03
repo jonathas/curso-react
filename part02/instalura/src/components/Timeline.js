@@ -41,6 +41,28 @@ export default class Timeline extends Component {
             }
             this.setState({ fotos: infoFotos.fotos });
         });
+
+        Pubsub.subscribe('atualiza-liker', (topico, infoLiker) => {
+            const fotoAchada = this.state.fotos.find(foto => foto.id === infoLiker.fotoId);
+            fotoAchada.likeada = !fotoAchada.likeada;
+
+            const possivelLiker = fotoAchada.likers.find(liker => liker.login === infoLiker.liker.login);
+
+            if (!possivelLiker) {
+                fotoAchada.likers.push(infoLiker.liker);
+            } else {
+                const novosLikers = fotoAchada.likers.filter(liker => liker.login !== infoLiker.liker.login);
+                fotoAchada.likers = novosLikers;
+            }
+
+            this.setState({ fotos: this.state.fotos });
+        });
+
+        Pubsub.subscribe('novos-comentarios', (topico, infoComentario) => {
+            const fotoAchada = this.state.fotos.find(foto => foto.id === infoComentario.fotoId);
+            fotoAchada.comentarios.push(infoComentario.novoComentario);
+            this.setState({ fotos: this.state.fotos });
+        });
     }
 
     componentDidMount() {
@@ -71,10 +93,8 @@ export default class Timeline extends Component {
 
             const liker = await res.json();
             Pubsub.publish('atualiza-liker', { fotoId, liker });
-            return true;
         } catch (err) {
             console.log(err.message);
-            return false;
         }
     }
 
