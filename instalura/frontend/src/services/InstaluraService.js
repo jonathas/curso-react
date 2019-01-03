@@ -1,7 +1,7 @@
 export default class InstaluraService {
 
     constructor() {
-        this.baseUrl = 'http://localhost:8080/api';
+        this.apiBase = process.env.REACT_APP_API_BASE;
         this.headers = new Headers({
             'Content-type': 'application/json',
             'X-AUTH-TOKEN': localStorage.getItem('auth-token')
@@ -9,11 +9,11 @@ export default class InstaluraService {
     }
 
     listaFotos() {
-        return fetch(`${this.baseUrl}/fotos`, { headers: this.headers });
+        return fetch(`${this.apiBase}/fotos`, { headers: this.headers });
     }
 
     listaFotosPublicas(name) {
-        return fetch(`${this.baseUrl}/public/fotos/${name}`);
+        return fetch(`${this.apiBase}/public/fotos/${name}`);
     }
 
     like(fotoId) {
@@ -22,7 +22,7 @@ export default class InstaluraService {
             headers: this.headers
         };
 
-        return fetch(`${this.baseUrl}/fotos/${fotoId}/like`, requestInfo);
+        return fetch(`${this.apiBase}/fotos/${fotoId}/like`, requestInfo);
     }
 
     comenta(fotoId, textoComentario) {
@@ -32,7 +32,7 @@ export default class InstaluraService {
             headers: this.headers
         };
 
-        return fetch(`${this.baseUrl}/fotos/${fotoId}/comment`, requestInfo);
+        return fetch(`${this.apiBase}/fotos/${fotoId}/comment`, requestInfo);
     }
 
 }
