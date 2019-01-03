@@ -18,7 +18,7 @@ ReactDOM.render(
                 isLoggedIn() ? (
                     <App/>
                 ) : (
-                    <Redirect to="/"/>
+                    <Redirect to="/?msg=Você precisa estar logado para acessar o endereço"/>
                 )
             )} />
         </Switch>

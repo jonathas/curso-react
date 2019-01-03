@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 
 class Login extends Component {
 
-    constructor() {
-        super();
-        this.state = { msg: '' };
+    constructor(props) {
+        super(props);
+        this.state = queryString.parse(this.props.location.search);
     }
 
     async envia(event) {
