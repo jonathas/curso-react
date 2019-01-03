@@ -9,8 +9,16 @@ export default class Timeline extends Component {
     }
 
     async componentDidMount() {
-        const token = localStorage.getItem('auth-token');
-        const res = await fetch(`http://localhost:8080/api/fotos?X-AUTH-TOKEN=${token}`);
+        let urlPerfil;
+
+        if (!this.props.name) {
+            const token = localStorage.getItem('auth-token');
+            urlPerfil = `http://localhost:8080/api/fotos?X-AUTH-TOKEN=${token}`;
+        } else {
+            urlPerfil = `http://localhost:8080/api/public/fotos/${this.props.name}`;
+        }
+
+        const res = await fetch(urlPerfil);
         const fotos = await res.json();
         this.setState({ fotos });
     }

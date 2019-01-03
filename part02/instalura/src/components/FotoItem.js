@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 class FotoAtualizacoes extends Component {
     render(){
@@ -22,16 +23,14 @@ class FotoInfo extends Component {
               <div className="foto-info-likes">
               {
                 this.props.foto.likers.map(liker => {
-                  return (<button key="{liker.login}">{liker.login},</button>)
+                  return (<Link to={`/timeline/${liker.login}`} key="{liker.login}">{liker.login},</Link>)
                 })  
               }
-
               curtiram
-
               </div>
 
               <p className="foto-info-legenda">
-                <button className="foto-info-autor">autor </button>
+              <button className="foto-info-autor">{this.props.foto.loginUsuario}</button>
                 {this.props.foto.comentario}
               </p>
 
@@ -40,7 +39,7 @@ class FotoInfo extends Component {
                 this.props.foto.comentarios.map(comentario => {
                   return (
                     <li className="comentario" key={comentario.id}>
-                      <button className="foto-info-autor">{comentario.login} </button>
+                      <Link to={`/timeline/${comentario.login}`} className="foto-info-autor">{comentario.login}</Link>
                       {comentario.texto}
                     </li>
                     );
@@ -59,9 +58,9 @@ class FotoHeader extends Component {
               <figure className="foto-usuario">
               <img src={this.props.foto.urlPerfil} alt="foto do usuario"/>
                 <figcaption className="foto-usuario">
-                  <button>
+                  <Link to={`/timeline/${this.props.foto.loginUsuario}`}>
                     {this.props.foto.loginUsuario}
-                  </button>  
+                  </Link>
                 </figcaption>
               </figure>
             <time className="foto-data">{this.props.foto.horario}</time>

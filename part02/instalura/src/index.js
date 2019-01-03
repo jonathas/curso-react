@@ -11,17 +11,20 @@ function isLoggedIn() {
     return (localStorage.getItem('auth-token') === null) ? false : true;
 }
 
+const notAllowedMsg = "/?msg=Você precisa estar logado para acessar o endereço";
+
 ReactDOM.render(
     <BrowserRouter>
         <Switch>
             <Route exact path="/" component={Login} />
-            <Route path="/timeline" render={() => (
+            <Route exact path="/timeline" render={() => (
                 isLoggedIn() ? (
                     <App/>
                 ) : (
-                    <Redirect to="/?msg=Você precisa estar logado para acessar o endereço"/>
+                    <Redirect to={notAllowedMsg} />
                 )
             )} />
+            <Route exact path="/timeline/:name" component={App} />
             <Route path="/logout" component={Logout} />
         </Switch>
     </BrowserRouter>,
