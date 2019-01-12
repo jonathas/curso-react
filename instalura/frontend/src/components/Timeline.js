@@ -9,16 +9,16 @@ export default class Timeline extends Component {
         super(props);
         this.state = { fotos: [] };
         this.name = this.props.name;
-        this.timelineService = new TimelineService();
     }
 
     async carregaFotos() {
-        this.timelineService.lista(this.name);
+        TimelineService.lista(this.name, this.props.store);
     }
 
     componentWillMount() {
-        this.timelineService.subscribe(fotos => {
-            if (fotos.length > 0) {
+        this.props.store.subscribe(() => {
+            const fotos = this.props.store.getState();
+            if (fotos && fotos.length > 0) {
                 this.name = fotos[0].loginUsuario;
             }
             this.setState({ fotos });
@@ -37,11 +37,11 @@ export default class Timeline extends Component {
     }
 
     like(fotoId) {
-        this.timelineService.like(fotoId);
+        this.props.store.like(fotoId);
     }
 
     comenta(fotoId, textoComentario) {
-        return this.timelineService.comenta(fotoId, textoComentario);
+        return this.props.store.comenta(fotoId, textoComentario);
     }
 
     // this is important because the instagram images in the API were expired

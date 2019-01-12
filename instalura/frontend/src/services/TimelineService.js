@@ -1,20 +1,19 @@
 import Pubsub from 'pubsub-js';
 import InstaluraService from './InstaluraService';
 
-export default class TimelineService {
+class TimelineService {
 
-    constructor(fotos) {
-        this.fotos = fotos;
+    constructor() {
         this.instaluraService = new InstaluraService();
     }
 
-    async lista(name) {
+    async lista(name, store) {
         const res = (!name) ?
             await this.instaluraService.listaFotos() :
             await this.instaluraService.listaFotosPublicas(name);
         
-        this.fotos = await res.json();
-        this._updateTimeline();
+        const fotos = await res.json();
+        store.dispatch({ type: 'LISTA', fotos });
     }
 
     async like(fotoId) {
@@ -78,3 +77,5 @@ export default class TimelineService {
     }
 
 }
+
+export default new TimelineService();
