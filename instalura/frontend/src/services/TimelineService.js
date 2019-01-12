@@ -1,3 +1,4 @@
+import { listagem, search, curtir, comentario } from '../actions/actionCreator';
 import InstaluraService from './InstaluraService';
 
 class TimelineService {
@@ -16,7 +17,7 @@ class TimelineService {
                 const res = await this.instaluraService.listaFotosPublicas(name);
                 const fotos = await res.json();
 
-                dispatch({ type: 'PESQUISA', fotos });
+                dispatch(search(fotos));
                 return fotos;
             } catch (err) {
                 console.log(err.message);
@@ -31,7 +32,7 @@ class TimelineService {
                 await this.instaluraService.listaFotosPublicas(name);
 
             const fotos = await res.json();
-            dispatch({ type: 'LISTA', fotos });
+            dispatch(listagem(fotos));
             return fotos;
         };
     }
@@ -45,7 +46,7 @@ class TimelineService {
                 }
 
                 const liker = await res.json();
-                dispatch({ type: 'LIKE', fotoId, liker });
+                dispatch(curtir(fotoId, liker));
                 return liker;
             } catch (err) {
                 console.log(err.message);
@@ -63,8 +64,7 @@ class TimelineService {
 
                 const novoComentario = await res.json();
 
-                dispatch({ type: 'COMENTARIO', fotoId, novoComentario });
-
+                dispatch(comentario(fotoId, novoComentario));
                 return true;
             } catch (err) {
                 console.log(err.message);
