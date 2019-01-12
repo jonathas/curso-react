@@ -7,13 +7,16 @@ class TimelineService {
         this.instaluraService = new InstaluraService();
     }
 
-    async lista(name, store) {
-        const res = (!name) ?
-            await this.instaluraService.listaFotos() :
-            await this.instaluraService.listaFotosPublicas(name);
-        
-        const fotos = await res.json();
-        store.dispatch({ type: 'LISTA', fotos });
+    lista(name) {
+        return async dispatch => {
+            const res = (!name) ?
+                await this.instaluraService.listaFotos() :
+                await this.instaluraService.listaFotosPublicas(name);
+
+            const fotos = await res.json();
+            dispatch({ type: 'LISTA', fotos });
+            return fotos;
+        };
     }
 
     async like(fotoId) {

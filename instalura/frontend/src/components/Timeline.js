@@ -12,7 +12,7 @@ export default class Timeline extends Component {
     }
 
     async carregaFotos() {
-        TimelineService.lista(this.name, this.props.store);
+        this.props.store.dispatch(TimelineService.lista(this.name));
     }
 
     componentWillMount() {
