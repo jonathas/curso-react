@@ -13,3 +13,7 @@ export function curtir(fotoId, liker) {
 export function comentario(fotoId, novoComentario) {
     return { type: 'COMENTARIO', fotoId, novoComentario };
 }
+
+export function notifica(msg) {
+    return { type: 'ALERT', msg };
+}

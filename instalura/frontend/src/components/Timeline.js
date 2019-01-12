@@ -17,7 +17,7 @@ export default class Timeline extends Component {
 
     componentWillMount() {
         this.props.store.subscribe(() => {
-            const fotos = this.props.store.getState();
+            const fotos = this.props.store.getState().timeline;
             if (fotos && fotos.length > 0) {
                 this.name = fotos[0].loginUsuario;
             }

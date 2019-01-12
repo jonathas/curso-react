@@ -3,6 +3,17 @@ import TimelineService from '../services/TimelineService';
 
 export default class Header extends Component {
 
+  constructor() {
+    super();
+    this.state = { msg: '' };
+  }
+
+  componentDidMount() {
+    this.props.store.subscribe(() => {
+      this.setState({ msg: this.props.store.getState().notificacao });
+    });
+  }
+
   async pesquisa(event) {
     event.preventDefault();
     this.props.store.dispatch(TimelineService.pesquisa(this.loginPesquisado.value));
@@ -20,10 +31,10 @@ export default class Header extends Component {
           <input type="submit" value="Buscar" className="header-busca-submit" />
         </form>
 
-
         <nav>
           <ul className="header-nav">
             <li className="header-nav-item">
+              <span>{this.state.msg}</span>
               <button>
                 ♡
                   {/*                 ♥ */}

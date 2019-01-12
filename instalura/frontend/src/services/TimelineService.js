@@ -1,4 +1,4 @@
-import { listagem, search, curtir, comentario } from '../actions/actionCreator';
+import { listagem, search, curtir, comentario, notifica } from '../actions/actionCreator';
 import InstaluraService from './InstaluraService';
 
 class TimelineService {
@@ -16,6 +16,12 @@ class TimelineService {
 
                 const res = await this.instaluraService.listaFotosPublicas(name);
                 const fotos = await res.json();
+
+                if (fotos.length === 0) {
+                    dispatch(notifica('Usuário não encontrado'));
+                } else {
+                    dispatch(notifica('Usuário encontrado'));
+                }
 
                 dispatch(search(fotos));
                 return fotos;
