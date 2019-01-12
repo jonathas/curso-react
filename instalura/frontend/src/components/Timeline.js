@@ -37,11 +37,11 @@ export default class Timeline extends Component {
     }
 
     like(fotoId) {
-        this.props.store.like(fotoId);
+        this.props.store.dispatch(TimelineService.like(fotoId));
     }
 
     comenta(fotoId, textoComentario) {
-        return this.props.store.comenta(fotoId, textoComentario);
+        return this.props.store.dispatch(TimelineService.comenta(fotoId, textoComentario));
     }
 
     // this is important because the instagram images in the API were expired

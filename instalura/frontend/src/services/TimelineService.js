@@ -1,10 +1,27 @@
-import Pubsub from 'pubsub-js';
 import InstaluraService from './InstaluraService';
 
 class TimelineService {
 
     constructor() {
         this.instaluraService = new InstaluraService();
+    }
+
+    pesquisa(name) {
+        return async dispatch => {
+            try {
+                if (!name) {
+                    throw new Error('O valor pesquisado não pode ser vazio');
+                }
+
+                const res = await this.instaluraService.listaFotosPublicas(name);
+                const fotos = await res.json();
+
+                dispatch({ type: 'PESQUISA', fotos });
+                return fotos;
+            } catch (err) {
+                console.log(err.message);
+            }
+        };
     }
 
     lista(name) {
@@ -19,64 +36,41 @@ class TimelineService {
         };
     }
 
-    async like(fotoId) {
-        try {
-            const res = await this.instaluraService.like(fotoId);
-            if (!res.ok) {
-                throw new Error('Não foi possível realizar o like da foto');
+    like(fotoId) {
+        return async dispatch => {
+            try {
+                const res = await this.instaluraService.like(fotoId);
+                if (!res.ok) {
+                    throw new Error('Não foi possível realizar o like da foto');
+                }
+
+                const liker = await res.json();
+                dispatch({ type: 'LIKE', fotoId, liker });
+                return liker;
+            } catch (err) {
+                console.log(err.message);
             }
-
-            const liker = await res.json();
-            this._updateLike(fotoId, liker);
-        } catch (err) {
-            console.log(err.message);
         }
     }
 
-    _updateLike(fotoId, liker) {
-        const fotoAchada = this.fotos.find(foto => foto.id === fotoId);
-        fotoAchada.likeada = !fotoAchada.likeada;
+    comenta(fotoId, textoComentario) {
+        return async dispatch => {
+            try {
+                const res = await this.instaluraService.comenta(fotoId, textoComentario);
+                if (!res.ok) {
+                    throw new Error('Não foi possível comentar');
+                }
 
-        const possivelLiker = fotoAchada.likers.find(likerAtual => likerAtual.login === liker.login);
+                const novoComentario = await res.json();
 
-        if (!possivelLiker) {
-            fotoAchada.likers.push(liker);
-        } else {
-            const novosLikers = fotoAchada.likers.filter(likerAtual => likerAtual.login !== liker.login);
-            fotoAchada.likers = novosLikers;
-        }
+                dispatch({ type: 'COMENTARIO', fotoId, novoComentario });
 
-        this._updateTimeline();
-    }
-
-    _updateTimeline() {
-        Pubsub.publish('timeline', { fotos: this.fotos });
-    }
-
-    async comenta(fotoId, textoComentario) {
-        try {
-            const res = await this.instaluraService.comenta(fotoId, textoComentario);
-            if (!res.ok) {
-                throw new Error('Não foi possível comentar');
+                return true;
+            } catch (err) {
+                console.log(err.message);
+                return false;
             }
-
-            const novoComentario = await res.json();
-            const fotoAchada = this.fotos.find(foto => foto.id === fotoId);
-            fotoAchada.comentarios.push(novoComentario);
-
-            this._updateTimeline();
-
-            return true;
-        } catch (err) {
-            console.log(err.message);
-            return false;
         }
-    }
-
-    subscribe(callback) {
-        Pubsub.subscribe('timeline', (topico, fotosInfo) => {
-            callback(fotosInfo.fotos);
-        });
     }
 
 }

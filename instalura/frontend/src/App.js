@@ -16,7 +16,7 @@ class App extends Component {
     return (
       <div id="root">
         <div className="main">
-          <Header />
+          <Header store={store} />
           <Timeline name={name} store={store} />
         </div>
       </div>

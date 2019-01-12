@@ -1,29 +1,11 @@
 import React, { Component } from 'react';
-import InstaluraService from '../services/InstaluraService';
-import Pubsub from 'pubsub-js';
+import TimelineService from '../services/TimelineService';
 
 export default class Header extends Component {
 
-  constructor() {
-    super();
-    this.instaluraService = new InstaluraService();
-  }
-
   async pesquisa(event) {
-    try {
-      event.preventDefault();
-
-      if (!this.loginPesquisado.value) {
-        throw new Error('O valor pesquisado não pode ser vazio');
-      }
-
-      const res = await this.instaluraService.listaFotosPublicas(this.loginPesquisado.value);
-      const fotos = await res.json();
-
-      Pubsub.publish('timeline', {fotos});
-    } catch (err) {
-      console.log(err.message); 
-    }
+    event.preventDefault();
+    this.props.store.dispatch(TimelineService.pesquisa(this.loginPesquisado.value));
   }
 
   render() {
