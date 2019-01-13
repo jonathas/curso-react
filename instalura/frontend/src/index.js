@@ -6,6 +6,11 @@ import Logout from './components/Logout';
 import * as serviceWorker from './serviceWorker';
 import { Route, Switch } from 'react-router';
 import { BrowserRouter, Redirect } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router/immutable';
+import configureStore, { history } from './reducers/configureStore';
+
+const store = configureStore();
 
 function isLoggedIn() {
     return (localStorage.getItem('auth-token') === null) ? false : true;
@@ -14,20 +19,24 @@ function isLoggedIn() {
 const notAllowedMsg = "/?msg=Você precisa estar logado para acessar o endereço";
 
 ReactDOM.render(
-    <BrowserRouter>
-        <Switch>
-            <Route exact path="/" component={Login} />
-            <Route exact path="/timeline" render={() => (
-                isLoggedIn() ? (
-                    <App/>
-                ) : (
-                    <Redirect to={notAllowedMsg} />
-                )
-            )} />
-            <Route exact path="/timeline/:name" component={App} />
-            <Route path="/logout" component={Logout} />
-        </Switch>
-    </BrowserRouter>,
+    <Provider store={store}>
+        <ConnectedRouter history={history}>
+        <BrowserRouter>
+            <Switch>
+                <Route exact path="/" component={Login} />
+                <Route exact path="/timeline" render={() => (
+                    isLoggedIn() ? (
+                        <App />
+                    ) : (
+                            <Redirect to={notAllowedMsg} />
+                        )
+                )} />
+                <Route exact path="/timeline/:name" component={App} />
+                <Route path="/logout" component={Logout} />
+            </Switch>
+            </BrowserRouter>
+        </ConnectedRouter>
+    </Provider>,
     document.getElementById('root')
 );
 

@@ -1,22 +1,17 @@
 import React, { Component } from 'react';
 import TimelineService from '../services/TimelineService';
+import { connect } from 'react-redux';
 
-export default class Header extends Component {
+class Header extends Component {
 
   constructor() {
     super();
     this.state = { msg: '' };
   }
 
-  componentDidMount() {
-    this.props.store.subscribe(() => {
-      this.setState({ msg: this.props.store.getState().notificacao });
-    });
-  }
-
   async pesquisa(event) {
     event.preventDefault();
-    this.props.store.dispatch(TimelineService.pesquisa(this.loginPesquisado.value));
+    this.props.lista(this.loginPesquisado.value);
   }
 
   render() {
@@ -47,3 +42,18 @@ export default class Header extends Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return { msg: state.msg };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    lista: (name) => {
+      dispatch(TimelineService.lista(name));
+    }
+  }
+};
+
+const HeaderContainer = connect(mapStateToProps, mapDispatchToProps)(Header);
+export default HeaderContainer;
