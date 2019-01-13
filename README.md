@@ -128,3 +128,36 @@ Then access the following address to populate the database: http://localhost:808
 
  - Implementation of like and comment features
  - Presentational and Container components
+
+---
+
+## React course part 3: The flux architecture, Redux implementation and server side rendering
+
+## Content
+
+### Flux
+
+ - Separating application logics into lighter layers
+ - Pattern Flux to make clear the path of data within our application
+
+### Introduction to Redux
+
+ - Redux as Flux implementation
+ - redux-thunk for asynchronous actions
+
+### Going deeper into Redux
+
+ - Bringing immutability to the project
+ - Isolating action creation with Action Creators
+ - Combining various reducing functions
+
+### Integration between React and Redux
+
+ - Using the connect function to generate container components
+ - Using the component provider to make the store available to everyone
+
+### Rendering on the server
+
+ - A little bit of Electrode
+ - Universal Javascript
+ - One store for each new request
