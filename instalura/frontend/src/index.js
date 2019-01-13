@@ -8,7 +8,7 @@ import { Route, Switch } from 'react-router';
 import { BrowserRouter, Redirect } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router/immutable';
-import configureStore, { history } from './reducers/configureStore';
+import configureStore, { history } from './store/configureStore';
 
 const store = configureStore();
 
