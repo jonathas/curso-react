@@ -22,8 +22,8 @@ class Timeline extends Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.name !== this.name) {
             this.name = nextProps.name;
+            this.carregaFotos();
         }
-        this.carregaFotos();
     }
 
     // this is important because the instagram images in the API were expired
